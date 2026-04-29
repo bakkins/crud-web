@@ -10,7 +10,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        return response()->json(Post::where('user_id', $request->user()->id)->get(), 200);
+        return response()->json(Post::latest()->get(), 200);
     }
 
     public function store(Request $request)
@@ -20,14 +20,13 @@ class PostController extends Controller
             'content' => 'required|string',
         ]);
 
-        $post = $request->user()->posts()->create($data);
+        $post = Post::create($data);
         return response()->json($post, 201);
     }
 
-    public function show(Request $request, Post $post)
+    public function show(Post $post)
     {
-        $post=$request->user()->posts()->show();
-        return response()->json($post);
+        return response()->json($post, 200);
     }
 
     public function update(Request $request, Post $post)
@@ -36,14 +35,17 @@ class PostController extends Controller
             'title'   => 'required|string|max:255',
             'content' => 'required|string',
         ]);
-
-        $post=$request->user()->posts()->update($data);
-        return response()->json($post);
+        if ($request->user()->id == $post->user_id){
+        $post->update($data);
+        return response()->json($post, 200);
+        }
     }
 
     public function destroy(Post $post)
     {
-        $post->$request->user()->posts()->delete();
-        return response()->json(['message' => 'Dzēsts']);
+        if ($request->user()->id == $post->user_id){
+        $post->delete();
+        return response()->json(['message' => 'Dzēsts'], 204);
+        }    
     }
 }
