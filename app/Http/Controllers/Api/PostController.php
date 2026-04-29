@@ -10,7 +10,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        return response()->json(Post::latest()->get());
+        return response()->json(Post::where('user_id', $request->user()->id)->get());
     }
 
     public function store(Request $request)
@@ -20,7 +20,7 @@ class PostController extends Controller
             'content' => 'required|string',
         ]);
 
-        $post = Post::create($data);
+        $post = $request->user()->posts()->create($data);
         return response()->json($post, 201);
     }
 
