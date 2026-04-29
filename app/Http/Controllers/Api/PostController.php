@@ -36,7 +36,7 @@ class PostController extends Controller
             'content' => 'required|string',
         ]);
 
-        $post->update($data);
+        $post=$request->user()->posts()->update($data);
         return response()->json($post);
     }
 

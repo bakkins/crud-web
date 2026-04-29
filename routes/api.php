@@ -9,9 +9,11 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::apiResource('posts', PostController::class);
-
 Route::post('/posts', [PostController::class, 'store']);
+Route::get('/posts', [PostController::class, 'index']);
+Route::put('/posts', [PostController::class, 'update']);
+Route::delete('/posts', [PostController::class, 'destroy']);
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
