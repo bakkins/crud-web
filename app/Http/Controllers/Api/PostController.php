@@ -10,7 +10,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        return response()->json(Post::where('user_id', $request->user()->id)->get());
+        return response()->json(Post::where('user_id', $request->user()->id)->get(), 200);
     }
 
     public function store(Request $request)
@@ -24,8 +24,9 @@ class PostController extends Controller
         return response()->json($post, 201);
     }
 
-    public function show(Post $post)
+    public function show(Request $request, Post $post)
     {
+        $post=$request->user()->posts()->show();
         return response()->json($post);
     }
 
@@ -42,7 +43,7 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        $post->delete();
+        $post->$request->user()->posts()->delete();
         return response()->json(['message' => 'Dzēsts']);
     }
 }
